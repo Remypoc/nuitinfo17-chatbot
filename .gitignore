@@ -6,3 +6,5 @@ package-lock.json
 npm-debug*
 .vscode
 src/client/public
+
+*__pycache__*

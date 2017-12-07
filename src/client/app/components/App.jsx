@@ -20,20 +20,20 @@ class DBPedia extends Component {
   componentWillMount() {
     const self = this;
     const { steps } = this.props;
-    const search = steps.search.value;
+    const user_msg = "user_msg=" + encodeURI(steps.wait_user_msg.value);
 
     const queryUrl = 'http://localhost:8000/get_simple_message';
 
-    const xhr = new XMLHttpRequest();
 
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', queryUrl, true);
+    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xhr.addEventListener('readystatechange', readyStateChange);
+    xhr.send(user_msg);
 
     function readyStateChange() {
-      console.log("LALALDLELDELDELDELDE");
-      console.log(this.responseText);
       if (this.readyState === 4) {
         const data = JSON.parse(this.responseText);
-        console.log(data);
         if (data.robot && data.format == "simple_message") {
           self.setState({ loading: false, result: data.message });
         } else {
@@ -41,9 +41,6 @@ class DBPedia extends Component {
         }
       }
     }
-
-    xhr.open('GET', queryUrl);
-    xhr.send();
   }
 
   triggetNext() {
@@ -97,17 +94,18 @@ const App = () => (
       {
         id: '1',
         message: 'Salut, qui es-tu ?',
-        trigger: 'search',
+        trigger: 'wait_user_msg',
       },
       {
-        id: 'search',
+        id: 'wait_user_msg',
         user: true,
         trigger: '3',
       },
       {
         id: '3',
         component: <DBPedia />,
-        asMessage: true
+        asMessage: true,
+        trigger: '1'
       },
     ]}
   />

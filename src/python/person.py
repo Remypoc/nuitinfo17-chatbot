@@ -1,7 +1,8 @@
 class Personne:
 
-    def __init__(self, nom=None, contact=None, role=None, responsable=None, niveau=None, equipe=None, 
-    competences=None, projet=None, complements=None):
+    def __init__(self, nom=None, contact=None, role=None, responsable=None,
+                 niveau=None, equipe=None, competences=None, projet=None,
+                 complements=None):
         self.nom = nom
         self.contact = contact
         self.role = role
@@ -13,7 +14,10 @@ class Personne:
         self.complements = complements
 
     def __str__(self):
-        return "Person : " + "nom = " + self.nom + ", contact = " + self.contact
+        return self.nom
+
+    def __repr__(self):
+        return self.__str__()
 
 if __name__ == "__main__":
     person = Personne("Albert", "Dupontel", "Aucun", "")
