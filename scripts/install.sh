@@ -14,6 +14,13 @@ apt-get install -y npm
 curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
 sudo apt-get install -y nodejs
 
+#python dependencies
+sudo apt-get install -y python3.5
+sudo apt-get install -y python3-pip
+sudo pip3 install --upgrade pip
+sudo pip3 install flask
+sudo pip3 install flask-cors
+
 # Fix error with shared folder and npm modules
 # https://medium.com/@dtinth/isolating-node-modules-in-vagrant-9e646067b36
 mkdir $HOME_DIR/vagrant_node_modules
@@ -23,9 +30,3 @@ mount --bind $HOME_DIR/vagrant_node_modules $PROJECT_DIR/node_modules
 cd $PROJECT_DIR
 npm install
 npm run build
-
-# Manual installation:
-# npm install webpack --save-dev
-# npm install babel-core babel-preset-env babel-loader babel-preset-react --save-dev
-# npm install react react-dom -s
-# npm install recharts -s
