@@ -20,6 +20,7 @@ sudo apt-get install -y python3-pip
 sudo pip3 install --upgrade pip
 sudo pip3 install flask
 sudo pip3 install flask-cors
+sudo pip3 install openpyxl
 
 # Fix error with shared folder and npm modules
 # https://medium.com/@dtinth/isolating-node-modules-in-vagrant-9e646067b36
