@@ -1,0 +1,8 @@
+node_modules
+.vagrant
+package-lock.json
+*.log*
+*.log
+npm-debug*
+.vscode
+src/client/public
