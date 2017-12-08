@@ -46,3 +46,51 @@ def qui_sait_faire_competence(competence):
         if personne.COMPETENCES == competence:
             p.append(personne)
     return p
+
+def comment_joindre_responsable_projet(projet):
+    """ Retourne le responsable ou None du projet concerné """
+    projet = projet.upper()
+    global personnes
+    for personne in personnes:
+        if personne.PROJET == projet:
+            return personne
+    return None
+
+def comment_contacter_personne(nom):
+    """ Comment contacter une personne """
+    nom = nom.upper()
+    global personnes
+    for personne in personnes:
+        if personne.NOM == nom:
+            return personne
+    return None
+
+def competences_liees_au_projet(projet):
+    """ Retourne les compétences liés à un projet donné """
+    projet = projet.upper()
+    competences = []
+    global personnes
+    for personne in personnes:
+        if personne.PROJET == projet:
+            competences.append(personne.competences)
+    return competences
+
+def role_de_personne(nom):
+    """ Retourne le role d'une personne donnée """
+    nom = nom.upper()
+    global personnes
+    for personne in personnes:
+        if personne.NOM == nom:
+            return personne.role
+    return None
+
+def de_quoi_personne_est_responsable(nom):
+    """ Retourne les personnes sous la responsabilité d'une autre personne """
+    nom = nom.upper()
+    responsable_de = []
+    global personnes
+    for personne in personnes:
+        if personne.RESPONSABLE == nom:
+            responsable_de.append(personne.nom)
+    return responsable_de
+

@@ -9,7 +9,9 @@ from flask_cors import CORS
 
 from dialog_flow import request_dialog_flow
 from excel_query import (qui_est_responsable, qui_travaille_sur_projet,
-                        qui_sait_faire_competence)
+                        qui_sait_faire_competence, comment_joindre_responsable_projet, 
+                        comment_contacter_personne, competences_liees_au_projet, 
+                        role_de_personne, de_quoi_personne_est_responsable)
 
 app = Flask("python")
 # Accept cross origins request
@@ -25,7 +27,7 @@ def api_root():
             print(request.form['user_msg'], file=sys.stderr)
             ai_response = request_dialog_flow(msg=request.form['user_msg'])
             if "qui_est_responsable" in ai_response:
-                personne = ai_response["qui_est_responsable"]["responsable"]
+                personne = ai_response["qui_est_responsable"]["name"]
                 responsable = qui_est_responsable(personne)
                 message="Le responsable de %s est %s" % (personne, responsable),
             elif "qui_travaille_sur_projet" in ai_response:
@@ -42,6 +44,47 @@ def api_root():
                     message = "Personne ne sait faire %s." % competence
                 else:
                     message = "Les personnes qui sachent faire %s sont: \n%s" % (competence, ', '.join(p.nom for p in personnes))
+            elif "comment_joindre_responsable_projet" in ai_response:
+                projet = ai_response['comment_joindre_responsable_projet']['projet']
+                personne = comment_joindre_responsable_projet(projet)
+                if not personne:
+                    message = "Je n'ai pas réussi à trouver ce projet !"
+                else:
+                    message = "Vous pouvez joindre %s, responsable du projet %s à %s" % (personne.nom, personne.projet, personne.contact)
+                pass
+            elif "comment_contacter_personne" in ai_response:
+                nom = ai_response['comment_contacter_personne']['nom']
+                personne = comment_contacter_personne(nom)
+                if not personne:
+                    message = "Je n'ai pas réussi à trouver cette personne !"
+                else:
+                    message = "Vous pouvez joindre %s à %s" % (personne.nom, personne.contact)
+                pass
+            elif "competences_liees_au_projet" in ai_response:
+                projet = ai_response['competences_liees_au_projet']['projet']
+                competences = competences_liees_au_projet(projet)
+                if not competences:
+                    message = "Je n'ai pas réussi à trouver ce projet !"
+                else:
+                    message = "Les compétences liées au projet %s sont : %s" % (projet, ', '.join(competences))
+                pass
+            elif "role_de_personne" in ai_response:
+                nom = ai_response['role_de_personne']['nom']
+                role = role_de_personne(nom)
+                if not role:
+                    message = "Je n'ai pas réussi à trouver cette personne !"
+                else:
+                    message = "Le role de %s est %s" % (nom, role)
+                pass
+            elif "de_quoi_personne_est_responsable" in ai_response:
+                nom = ai_response['de_quoi_personne_est_responsable']['nom']
+                responsable_de = de_quoi_personne_est_responsable(nom)
+                if not responsable_de:
+                    message = "%s n'est responsable de rien !" % nom
+                else:
+                    message = "%s est responsable de %s" % (nom, ', '.join(responsable_de))
+                pass
+            
 
     # TODO Sinon renvoyer un message par défaut
     return jsonify(
