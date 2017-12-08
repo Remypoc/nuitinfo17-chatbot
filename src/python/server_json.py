@@ -10,7 +10,7 @@ from flask_cors import CORS
 
 from dialog_flow import request_dialog_flow
 from excel_query import (qui_est_responsable, qui_travaille_sur_projet,
-                        qui_sait_faire_competence, quel_responsable_projet)
+                        qui_sait_faire_competence, quel_responsable_projet,
                         qui_sait_faire_competence, comment_joindre_responsable_projet, 
                         comment_contacter_personne, competences_liees_au_projet, 
                         role_de_personne, de_quoi_personne_est_responsable)
