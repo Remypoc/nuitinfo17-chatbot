@@ -5,7 +5,7 @@ L'équipe la plus classe du monde:
 * Valentin Bouquet
 * Rémy Pocquerusse
 
-![Etape 8](https://github.com/Bouquet2/nuitinfo17-chatbot/blob/master/images/nuit_info_2017_LCL_classement.png)
+![Classement](https://github.com/vbouquet/nuitinfo17-chatbot/blob/master/images/nuit_info_2017_LCL_classement.png)
 
 ## Technologies
 
