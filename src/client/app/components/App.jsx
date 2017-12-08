@@ -3,8 +3,19 @@ import PropTypes from 'prop-types';
 import ChatBot, { Loading } from 'react-simple-chatbot';
 
 // Source: https://github.com/LucasBassetti/react-simple-chatbot
+const theme = {
+  background: '#f5f8fb',
+  fontFamily: 'Helvetica Neue',
+  headerBgColor: '#EF6C00',
+  headerFontColor: '#fff',
+  headerFontSize: '15px',
+  botBubbleColor: '#EF6C00',
+  botFontColor: '#fff',
+  userBubbleColor: '#fff',
+  userFontColor: '#4a4a4a',
+};
 
-class DBPedia extends Component {
+class BotResponse extends Component {
   constructor(props) {
     super(props);
 
@@ -12,6 +23,7 @@ class DBPedia extends Component {
       loading: true,
       result: '',
       trigger: false,
+      msg_format: 'classic'
     };
 
     this.triggetNext = this.triggetNext.bind(this);
@@ -35,7 +47,9 @@ class DBPedia extends Component {
       if (this.readyState === 4) {
         const data = JSON.parse(this.responseText);
         if (data.robot && data.format == "simple_message") {
-          self.setState({ loading: false, result: data.message });
+          self.setState({ loading: false, result: data.messagen, msg_format='classic' });
+        } else if (data.robot && data.format == "url_message") {
+          self.setState({ loading: false, result: data.message, msg_format='url'});
         } else {
           self.setState({ loading: false, result: 'Not found.' });
         }
@@ -52,30 +66,48 @@ class DBPedia extends Component {
   render() {
     const { trigger, loading, result } = this.state;
 
-    return (
-      <div style={{ width: '100%' }}>
-        { loading ? <Loading /> : result }
-        {
-          !loading &&
-          <div
-            style={{
-              textAlign: 'center',
-              marginTop: 20,
-            }}
-          >
-          </div>
-        }
-      </div>
-    );
+    if (msg_format == 'simple_message') {
+      return (
+        <div style={{ width: '100%' }}>
+          { loading ? <Loading /> : result }
+          {
+            !loading &&
+            <div
+              style={{
+                textAlign: 'center',
+                marginTop: 20,
+              }}
+            >
+            </div>
+          }
+        </div>
+      );
+    } else if (msg_format == 'url') {
+      return (
+        <div style={{ width: '100%' }}>
+          { loading ? <Loading /> : result }
+          {
+            !loading &&
+            <div
+              style={{
+                textAlign: 'center',
+                marginTop: 20,
+              }}
+            >
+            </div>
+          }
+        </div>
+      );
+    }
   }
 }
 
-DBPedia.propTypes = {
+BotResponse.propTypes = {
   steps: PropTypes.object,
   triggerNextStep: PropTypes.func,
 };
 
-DBPedia.defaultProps = {
+BotResponse.defaultProps = {
   steps: undefined,
   triggerNextStep: undefined,
 };
@@ -95,7 +127,7 @@ const App = () => (
       },
       {
         id: '3',
-        component: <DBPedia />,
+        component: <BotResponse />,
         asMessage: true,
         trigger: 'wait_user_msg'
       },

@@ -68,3 +68,21 @@ def quel_responsable_projet(projet):
     return p
 
 
+def qui_est_personne(nom):
+    """ Retourne des informations sur la personne.
+    Returns:
+        (Str) Informations sur la personne concerné
+    """
+    nom = nom.upper()
+    global personnes
+    inf = None
+    p = None
+    for personne in personnes:
+        if personne.NOM == nom:
+            p = personne
+            break
+    if p is not None:
+        inf = "<div href='{url}'>{nom}</div>".format(
+            url=personne.complements, nom=personne.nom)
+
+    return inf

@@ -10,7 +10,8 @@ from flask_cors import CORS
 
 from dialog_flow import request_dialog_flow
 from excel_query import (qui_est_responsable, qui_travaille_sur_projet,
-                        qui_sait_faire_competence, quel_responsable_projet)
+                        qui_sait_faire_competence, quel_responsable_projet,
+                        qui_est_personne)
 
 app = Flask("python")
 # Accept cross origins request
@@ -19,7 +20,7 @@ cors = CORS(app, resources={r"*": {"origins": "*"}})
 # Route to speak to the chat bot
 @app.route('/get_simple_message', methods=['GET', 'POST'])
 def api_root():
-    message = "Je n'ai pas compris la question"
+    message = "Je n'ai pas compris la question."
     format_message="simple_message"
     if request.method == 'POST':
         if request.form['user_msg']:
@@ -56,6 +57,14 @@ def api_root():
                     message = "Aucun responsable pour le projet %s." % (projet)
                 else:
                     message = "Le responsable du projet %s est %s." % (projet, personne.nom)
+            elif "qui_est_personne" in ai_response:
+                personne = ai_response["qui_est_personne"]["personne"]
+                url = qui_est_personne(personne)
+                format_message = "url_message"
+                if not url:
+                    message = "Aucun information disponible sur %s." % (personne)
+                else:
+                    message = url
             else:
                 if "alternative" in ai_response:
                     message=ai_response["alternative"]
