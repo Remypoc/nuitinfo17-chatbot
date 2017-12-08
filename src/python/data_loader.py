@@ -1,3 +1,7 @@
+"""
+Load data from excel
+"""
+
 from openpyxl import load_workbook
 from person import Personne
 

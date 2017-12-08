@@ -63,14 +63,6 @@ class DBPedia extends Component {
               marginTop: 20,
             }}
           >
-            {
-              !trigger &&
-              <button
-                onClick={() => this.triggetNext()}
-              >
-                Search Again
-              </button>
-            }
           </div>
         }
       </div>
@@ -105,7 +97,7 @@ const App = () => (
         id: '3',
         component: <DBPedia />,
         asMessage: true,
-        trigger: '1'
+        trigger: 'wait_user_msg'
       },
     ]}
   />

@@ -8,3 +8,6 @@ npm-debug*
 src/client/public
 
 *__pycache__*
+
+.~lock*
+response.json
