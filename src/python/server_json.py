@@ -8,7 +8,8 @@ from flask import Flask, json, jsonify, request
 from flask_cors import CORS
 
 from dialog_flow import request_dialog_flow
-from excel_query import qui_est_responsable, qui_travaille_sur_projet
+from excel_query import (qui_est_responsable, qui_travaille_sur_projet,
+                        qui_sait_faire_competence)
 
 app = Flask("python")
 # Accept cross origins request
@@ -17,6 +18,8 @@ cors = CORS(app, resources={r"*": {"origins": "*"}})
 # Route to speak to the chat bot
 @app.route('/get_simple_message', methods=['GET', 'POST'])
 def api_root():
+    message = "Je n'ai pas compris la question"
+    format_message="simple_message"
     if request.method == 'POST':
         if request.form['user_msg']:
             print(request.form['user_msg'], file=sys.stderr)
@@ -24,30 +27,26 @@ def api_root():
             if "qui_est_responsable" in ai_response:
                 personne = ai_response["qui_est_responsable"]["responsable"]
                 responsable = qui_est_responsable(personne)
-                return jsonify(
-                    message="Le responsable de %s est %s" % (personne, responsable),
-                    format="simple_message",
-                    robot=True
-                )
+                message="Le responsable de %s est %s" % (personne, responsable),
             elif "qui_travaille_sur_projet" in ai_response:
                 projet = ai_response["qui_travaille_sur_projet"]["project"]
                 personnes = qui_travaille_sur_projet(projet)
                 if not personnes:
-                    return jsonify(
-                        message="Personne ne travaille sur le projet %s." % projet,
-                        format="simple_message",
-                        robot=True
-                    )
-                return jsonify(
+                    message="Personne ne travaille sur le projet %s." % projet
+                else:
                     message="Les personnes qui travaillent sur le projet %s sont:\n%s" % (projet, ', '.join(p.nom for p in personnes)),
-                    format="simple_message",
-                    robot=True
-                )
+            elif "qui_sait_faire_competence" in ai_response:
+                competence = ai_response["qui_sait_faire_competence"]["competence"]
+                personnes = qui_sait_faire_competence(competence)
+                if not personnes:
+                    message = "Personne ne sait faire %s." % competence
+                else:
+                    message = "Les personnes qui sachent faire %s sont: \n%s" % (competence, ', '.join(p.nom for p in personnes))
 
     # TODO Sinon renvoyer un message par défaut
     return jsonify(
-        message="Je n'ai pas compris la question",
-        format="simple_message",
+        message=message,
+        format=format_message,
         robot=True
     )
 
