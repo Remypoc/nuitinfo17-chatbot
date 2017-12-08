@@ -26,7 +26,8 @@ vagrant ssh
 cd /vagrant
 sudo mount --bind $HOME_DIR/vagrant_node_modules $PROJECT_DIR/node_modules
 npm run build
-node src/server/main.js &
+sudo chmod +x run_server.sh
+./run_server.sh
 
 # Accéder au navigateur à l'URL http://localhost:8080
 ```
