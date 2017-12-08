@@ -34,7 +34,7 @@ def api_root():
                 personnes = qui_travaille_sur_projet(projet)
                 if not personnes:
                     return jsonify(
-                        message="Personne ne travaille sur le porjet %s." % projet,
+                        message="Personne ne travaille sur le projet %s." % projet,
                         format="simple_message",
                         robot=True
                     )
