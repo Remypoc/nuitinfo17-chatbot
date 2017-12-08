@@ -11,9 +11,9 @@ from flask_cors import CORS
 from dialog_flow import request_dialog_flow
 from excel_query import (qui_est_responsable, qui_travaille_sur_projet,
                         qui_sait_faire_competence, quel_responsable_projet,
-                        qui_sait_faire_competence, comment_joindre_responsable_projet, 
-                        comment_contacter_personne, competences_liees_au_projet, 
-                        role_de_personne, de_quoi_personne_est_responsable)
+                        qui_sait_faire_competence, comment_joindre_responsable_projet,
+                        comment_contacter_personne, competences_liees_au_projet,
+                        role_de_personne, de_quoi_personne_est_responsable, qui_est_personne)
 
 app = Flask("python")
 # Accept cross origins request
@@ -92,7 +92,7 @@ def api_root():
                 else:
                     message = "%s est responsable de %s" % (nom, ', '.join(responsable_de))
                 pass
-            
+
             elif "quel_responsable_projet" in ai_response:
                 projet = ai_response["quel_responsable_projet"]["project"]
                 personne = quel_responsable_projet(projet)
