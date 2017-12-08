@@ -4,11 +4,13 @@ Listening: 127.0.0.1 (redirection 0.0.0.0 => 127.0.0.1 because of vagrant)
 Port: 8000
 """
 import sys
+import unidecode
 from flask import Flask, json, jsonify, request
 from flask_cors import CORS
 
 from dialog_flow import request_dialog_flow
 from excel_query import (qui_est_responsable, qui_travaille_sur_projet,
+                        qui_sait_faire_competence, quel_responsable_projet)
                         qui_sait_faire_competence, comment_joindre_responsable_projet, 
                         comment_contacter_personne, competences_liees_au_projet, 
                         role_de_personne, de_quoi_personne_est_responsable)
@@ -24,14 +26,20 @@ def api_root():
     format_message="simple_message"
     if request.method == 'POST':
         if request.form['user_msg']:
-            print(request.form['user_msg'], file=sys.stderr)
-            ai_response = request_dialog_flow(msg=request.form['user_msg'])
+            user_msg = unidecode.unidecode(request.form['user_msg']).replace("'", " ")
+            ai_response = request_dialog_flow(msg=user_msg)
             if "qui_est_responsable" in ai_response:
                 personne = ai_response["qui_est_responsable"]["name"]
                 responsable = qui_est_responsable(personne)
-                message="Le responsable de %s est %s" % (personne, responsable),
-            elif "qui_travaille_sur_projet" in ai_response:
-                projet = ai_response["qui_travaille_sur_projet"]["project"]
+                if responsable is None:
+                    message="Aucun responsable pour la personne %s" % (personne)
+                else:
+                    message="Le responsable de %s est %s" % (personne, responsable)
+            elif "qui_travaille_sur_projet" in ai_response or "qui_bosse_sur_projet" in ai_response:
+                if "qui_travaille_sur_projet" in ai_response:
+                    projet = ai_response["qui_travaille_sur_projet"]["project"]
+                else:
+                    projet = ai_response["qui_bosse_sur_projet"]["project"]
                 personnes = qui_travaille_sur_projet(projet)
                 if not personnes:
                     message="Personne ne travaille sur le projet %s." % projet
@@ -85,6 +93,16 @@ def api_root():
                     message = "%s est responsable de %s" % (nom, ', '.join(responsable_de))
                 pass
             
+            elif "quel_responsable_projet" in ai_response:
+                projet = ai_response["quel_responsable_projet"]["project"]
+                personne = quel_responsable_projet(projet)
+                if not personne:
+                    message = "Aucun responsable pour le projet %s." % (projet)
+                else:
+                    message = "Le responsable du projet %s est %s." % (projet, personne.nom)
+            else:
+                if "alternative" in ai_response:
+                    message=ai_response["alternative"]
 
     # TODO Sinon renvoyer un message par défaut
     return jsonify(

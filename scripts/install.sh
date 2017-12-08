@@ -21,6 +21,7 @@ sudo pip3 install --upgrade pip
 sudo pip3 install flask
 sudo pip3 install flask-cors
 sudo pip3 install openpyxl
+sudo pip3 install unidecode
 sudo pip3 install apiai
 
 # Fix error with shared folder and npm modules

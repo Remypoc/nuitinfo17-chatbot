@@ -1,7 +1,7 @@
 """
 Load data from excel
 """
-
+import unidecode
 from openpyxl import load_workbook
 from person import Personne
 
@@ -14,13 +14,19 @@ class DataLoader:
         ws = wb.worksheets[0]
         for row in ws.iter_rows(row_offset=1, max_col=9, max_row=29):
             persons.append(
-                Personne(row[0].value, row[1].value, row[2].value, row[3].value,
-                         row[4].value, row[5].value, row[6].value,
-                         row[7].value, row[8].value))
+                Personne(self.format(row[0].value), self.format(row[1].value), self.format(row[2].value), self.format(row[3].value),
+                         self.format(row[4].value), self.format(row[5].value), self.format(row[6].value),
+                         self.format(row[7].value), self.format(row[8].value))
+            )
         return persons
+
+    def format(self, param):
+        if type(param) is str:
+            return unidecode.unidecode(param).replace("'", " ")
+        return param
 
 if __name__ == "__main__":
     d = DataLoader()
     persons = d.getAllPersons()
     for person in persons:
-        print(person)
+        print(person.pretty_print())

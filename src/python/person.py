@@ -25,6 +25,10 @@ class Personne:
     def __str__(self):
         return self.nom
 
+    def pretty_print(self):
+        return ("Personne:\n name = %s\ncontact = %s\nrole = %s\n"
+               "responsable = %s\n niveau=%d\n...\n") % (self.nom, self.contact, self.role, self.responsable, self.niveau)
+
     def __repr__(self):
         return self.__str__()
 

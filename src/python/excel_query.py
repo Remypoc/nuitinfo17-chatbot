@@ -23,7 +23,7 @@ def qui_travaille_sur_projet(projet):
     return personnes_concernnees
 
 def qui_est_responsable(nom):
-    """ Retourne le responsable ou None de la personne concerné
+    """ Retourne la personne responsable du projet
     Returns:
         (Str) Nom du responsable
      """
@@ -93,4 +93,26 @@ def de_quoi_personne_est_responsable(nom):
         if personne.RESPONSABLE == nom:
             responsable_de.append(personne.nom)
     return responsable_de
+
+
+def quel_responsable_projet(projet):
+    """ Retourne la personne responsable du projet
+    Returns:
+        (Personne) Pesonne
+    """
+    projet = projet.upper()
+    global personnes
+    p = None
+    for personne in personnes:
+        if personne.PROJET == projet:
+            if p is None or p.niveau > personne.niveau:
+                if personne.RESPONSABLE != 'Aucun':
+                    for p_tmp in personnes:
+                        if p_tmp.NOM == personne.RESPONSABLE:
+                            p = p_tmp
+                else:
+                    p = personne
+
+    return p
+
 
