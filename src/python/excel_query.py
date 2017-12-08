@@ -23,7 +23,7 @@ def qui_travaille_sur_projet(projet):
     return personnes_concernnees
 
 def qui_est_responsable(nom):
-    """ Retourne le responsable ou None de la personne concerné
+    """ Retourne la personne responsable du projet
     Returns:
         (Str) Nom du responsable
      """

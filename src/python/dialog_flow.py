@@ -26,6 +26,12 @@ def request_dialog_flow(msg=None):
     with open("response.json", "w") as file:
         file.write(response_str)
     response_json = json.loads(response_str)
-    return {
-        response_json["result"]["metadata"]["intentName"]: response_json["result"]["parameters"]
-    }
+    if "intentName" in response_json["result"]["metadata"]:
+        return {
+            response_json["result"]["metadata"]["intentName"]: response_json["result"]["parameters"],
+            "alternative": response_json["result"]["fulfillment"]["speech"]
+        }
+    else:
+        return {
+            "alternative": response_json["result"]["fulfillment"]["speech"]
+        }
