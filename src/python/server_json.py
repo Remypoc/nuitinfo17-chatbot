@@ -9,7 +9,7 @@ from flask_cors import CORS
 
 from dialog_flow import request_dialog_flow
 from excel_query import (qui_est_responsable, qui_travaille_sur_projet,
-                        qui_sait_faire_competence)
+                        qui_sait_faire_competence, quel_responsable_projet)
 
 app = Flask("python")
 # Accept cross origins request
@@ -28,8 +28,11 @@ def api_root():
                 personne = ai_response["qui_est_responsable"]["responsable"]
                 responsable = qui_est_responsable(personne)
                 message="Le responsable de %s est %s" % (personne, responsable),
-            elif "qui_travaille_sur_projet" in ai_response:
-                projet = ai_response["qui_travaille_sur_projet"]["project"]
+            elif "qui_travaille_sur_projet" in ai_response or "qui_bosse_sur_projet" in ai_response:
+                if "qui_travaille_sur_projet" in ai_response:
+                    projet = ai_response["qui_travaille_sur_projet"]["project"]
+                else:
+                    projet = ai_response["qui_bosse_sur_projet"]["project"]
                 personnes = qui_travaille_sur_projet(projet)
                 if not personnes:
                     message="Personne ne travaille sur le projet %s." % projet
@@ -42,6 +45,13 @@ def api_root():
                     message = "Personne ne sait faire %s." % competence
                 else:
                     message = "Les personnes qui sachent faire %s sont: \n%s" % (competence, ', '.join(p.nom for p in personnes))
+            elif "quel_responsable_projet" in ai_response:
+                projet = ai_response["quel_responsable_projet"]["project"]
+                personne = quel_responsable_projet(projet)
+                if not personne:
+                    message = "Aucun responsable pour le projet %s." % (projet)
+                else:
+                    message = "Le responsable du projet %s est %s." % (projet, personne.nom)
 
     # TODO Sinon renvoyer un message par défaut
     return jsonify(

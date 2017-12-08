@@ -46,3 +46,25 @@ def qui_sait_faire_competence(competence):
         if personne.COMPETENCES == competence:
             p.append(personne)
     return p
+
+def quel_responsable_projet(projet):
+    """ Retourne la personne responsable du projet
+    Returns:
+        (Personne) Pesonne
+    """
+    projet = projet.upper()
+    global personnes
+    p = None
+    for personne in personnes:
+        if personne.PROJET == projet:
+            if p is None or p.niveau > personne.niveau:
+                if personne.RESPONSABLE != 'Aucun':
+                    for p_tmp in personnes:
+                        if p_tmp.NOM == personne.RESPONSABLE:
+                            p = p_tmp
+                else:
+                    p = personne
+
+    return p
+
+
